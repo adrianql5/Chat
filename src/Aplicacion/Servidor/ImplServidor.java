@@ -26,7 +26,7 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
         gestorBD.registrarUsuario(nombre, contraseña);
         for(Map.Entry<String, IntCliente> entry : clientesConectados.entrySet()){
             try {
-                entry.getValue().serNotificadoUsuariosRegistrados(gestorBD.obtenerListaUsuarios());
+                //entry.getValue().serNotificadoUsuariosRegistrados(gestorBD.obtenerListaUsuarios());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -51,7 +51,7 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
         for(Map.Entry<String, IntCliente> entry : clientesConectados.entrySet()){
             try {
                 entry.getValue().serNotificadoAmigosConectados(getAmigosConectados(entry.getKey()));
-                entry.getValue().serNotificadoUsuariosRegistrados(gestorBD.obtenerListaUsuarios());
+                //entry.getValue().serNotificadoUsuariosRegistrados(gestorBD.obtenerListaUsuarios());
                 entry.getValue().serNotificadoAmigos(gestorBD.obtenerListaAmigos(entry.getKey()));
                 entry.getValue().serNotificadoSolicitudesPendientes(gestorBD.obtenerSolicitudesAmistad(entry.getKey()));
             } catch (Exception e) {
@@ -172,4 +172,10 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
         }
         return false;
     }
+
+    @Override
+    public List<String> obtenerUsuarios(String nombreParcial) throws RemoteException {
+        return gestorBD.obtenerUsuariosPorPatron(nombreParcial);
+    }
+
 }

@@ -10,6 +10,7 @@ public interface IntServidor extends Remote {
     boolean desconectarCliente(String nombre) throws RemoteException;
     boolean registrarUsuario(String nombre, String contraseña) throws RemoteException;
 
+    List<String> obtenerUsuarios(String nombreParcial) throws RemoteException;
 
     boolean solicitarAmistad(String clienteSolicitante, String clienteSolicitado) throws RemoteException;
     boolean aceptarAmistad(String clienteSolicitante, String clienteSolicitado) throws RemoteException;

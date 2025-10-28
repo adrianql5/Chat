@@ -415,4 +415,42 @@ public class GestorBD {
 
         return usuarios;
     }
+
+    public List<String> obtenerUsuariosPorPatron(String nombreParcial) {
+        List<String> usuarios = new ArrayList<>();
+
+        if (conexion == null) {
+            System.err.println("ERROR: No hay conexión a la base de datos");
+            return usuarios;
+        }
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT nombre FROM usuarios WHERE nombre LIKE ?";
+            ps = conexion.prepareStatement(sql);
+            ps.setString(1, "%" + nombreParcial + "%");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                usuarios.add(rs.getString("nombre"));
+            }
+
+            System.out.println("Usuarios que coinciden con '" + nombreParcial + "': " + usuarios);
+
+        } catch (SQLException e) {
+            System.err.println("ERROR al buscar usuarios por patrón:");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return usuarios;
+    }
 }

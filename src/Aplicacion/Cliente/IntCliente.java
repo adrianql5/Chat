@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface IntCliente extends Remote{
-    void serNotificadoUsuariosRegistrados(List<String> usuarios) throws RemoteException;
+    //void serNotificadoUsuariosRegistrados(List<String> usuarios) throws RemoteException;
     void serNotificadoAmigosConectados(ConcurrentHashMap<String, IntCliente> amigosConectados)throws RemoteException;
     void serNotificadoAmigos(List<String> amigos)throws RemoteException;
     void serNotificadoSolicitudesPendientes(List<String> solicitudesPendientes)throws RemoteException;

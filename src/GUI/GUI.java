@@ -60,6 +60,8 @@ public class GUI extends javax.swing.JFrame {
     private JButton btnSolicitarAmistad;
     private JList<String> listaAmigos;
     private DefaultListModel<String> modeloAmigos;
+    private JTextField txtBuscarUsuario;
+    private JButton btnBuscarUsuario;
 
     // Panel de Solicitudes
     private JPanel panelSolicitudes;
@@ -442,7 +444,7 @@ public class GUI extends javax.swing.JFrame {
         mensajesEnviados.add(mensaje);
     }
 
-
+    /*
     private JPanel crearPanelAmigos() {
         panelAmigos = new JPanel(new GridLayout(1, 2, 10, 10));
         panelAmigos.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -479,6 +481,110 @@ public class GUI extends javax.swing.JFrame {
         panelAmigos.add(panelMisAmigos);
 
         return panelAmigos;
+    }*/
+
+    private JPanel crearPanelAmigos() {
+        panelAmigos = new JPanel(new GridLayout(1, 2, 10, 10));
+        panelAmigos.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Panel izquierdo - TODOS LOS USUARIOS
+        JPanel panelUsuarios = new JPanel(new BorderLayout(5, 5));
+
+        JLabel lblUsuarios = new JLabel("Todos los Usuarios");
+        lblUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
+        panelUsuarios.add(lblUsuarios, BorderLayout.NORTH);
+
+        // Panel de búsqueda
+        JPanel panelBusqueda = new JPanel(new BorderLayout(5, 5));
+        panelBusqueda.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        txtBuscarUsuario = new JTextField();
+        txtBuscarUsuario.setToolTipText("Ingrese nombre parcial del usuario");
+
+        // Listener para buscar al presionar Enter
+        txtBuscarUsuario.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    buscarUsuarios();
+                }
+            }
+        });
+
+        btnBuscarUsuario = new JButton("Buscar");
+        btnBuscarUsuario.addActionListener(e -> buscarUsuarios());
+
+        panelBusqueda.add(txtBuscarUsuario, BorderLayout.CENTER);
+        panelBusqueda.add(btnBuscarUsuario, BorderLayout.EAST);
+
+        panelUsuarios.add(panelBusqueda, BorderLayout.NORTH);
+
+        modeloUsuariosRegistrados = new DefaultListModel<>();
+        listaUsuariosRegistrados = new JList<>(modeloUsuariosRegistrados);
+        JScrollPane scrollUsuarios = new JScrollPane(listaUsuariosRegistrados);
+        panelUsuarios.add(scrollUsuarios, BorderLayout.CENTER);
+
+        btnSolicitarAmistad = new JButton("Enviar Solicitud de Amistad");
+        btnSolicitarAmistad.addActionListener(e -> enviarSolicitudAmistad());
+        panelUsuarios.add(btnSolicitarAmistad, BorderLayout.SOUTH);
+
+        // Panel derecho - Mis amigos
+        JPanel panelMisAmigos = new JPanel(new BorderLayout(5, 5));
+
+        JLabel lblMisAmigos = new JLabel("Mis Amigos");
+        lblMisAmigos.setHorizontalAlignment(SwingConstants.CENTER);
+        panelMisAmigos.add(lblMisAmigos, BorderLayout.NORTH);
+
+        modeloAmigos = new DefaultListModel<>();
+        listaAmigos = new JList<>(modeloAmigos);
+        JScrollPane scrollMisAmigos = new JScrollPane(listaAmigos);
+        panelMisAmigos.add(scrollMisAmigos, BorderLayout.CENTER);
+
+        panelAmigos.add(panelUsuarios);
+        panelAmigos.add(panelMisAmigos);
+
+        return panelAmigos;
+    }
+
+    private void buscarUsuarios() {
+        String nombreParcial = txtBuscarUsuario.getText().trim();
+
+        if (nombreParcial.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor ingrese un nombre para buscar",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            if (servidor != null) {
+                List<String> resultados = servidor.obtenerUsuarios(nombreParcial);
+
+                SwingUtilities.invokeLater(() -> {
+                    modeloUsuariosRegistrados.clear();
+
+                    if (resultados.isEmpty()) {
+                        JOptionPane.showMessageDialog(this,
+                                "No se encontraron usuarios con ese nombre",
+                                "Búsqueda",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        for (String usuario : resultados) {
+                            if (!usuario.equals(nombreUsuario)) {
+                                modeloUsuariosRegistrados.addElement(usuario);
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (RemoteException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar usuarios",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private void enviarSolicitudAmistad() {
@@ -618,6 +724,7 @@ public class GUI extends javax.swing.JFrame {
         });
     }
 
+    /*
     public void actualizarUsuariosRegistrados(ArrayList<String> strings) {
         this.usuariosRegistrados = strings;
         SwingUtilities.invokeLater(() -> {
@@ -628,7 +735,7 @@ public class GUI extends javax.swing.JFrame {
                 }
             }
         });
-    }
+    }*/
 
     public void actualizarAmigos(ArrayList<String> strings) {
         this.amigos = strings;
