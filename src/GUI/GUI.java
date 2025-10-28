@@ -817,28 +817,19 @@ public class GUI extends javax.swing.JFrame {
 
         try {
             if (servidor != null) {
-                // Primero verificar la contraseña actual conectándose
-                if (servidor.conectarCliente(nombreUsuario, contraseñaActual, cliente)) {
-                    // Si la contraseña actual es correcta, proceder a cambiarla
-                    if (servidor.modificarContraseña(nombreUsuario, nuevaContraseña)) {
-                        JOptionPane.showMessageDialog(this,
-                                "Contraseña cambiada exitosamente",
-                                "Éxito",
-                                JOptionPane.INFORMATION_MESSAGE);
+                if (servidor.modificarContraseña(nombreUsuario, contraseñaActual, nuevaContraseña)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Contraseña cambiada exitosamente",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
 
-                        // Limpiar campos
-                        txtContraseñaActual.setText("");
-                        txtNuevaContraseña.setText("");
-                        txtConfirmarNuevaContraseña.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this,
-                                "Error al cambiar la contraseña",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                    // Limpiar campos
+                    txtContraseñaActual.setText("");
+                    txtNuevaContraseña.setText("");
+                    txtConfirmarNuevaContraseña.setText("");
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "La contraseña actual es incorrecta",
+                            "La contraseña actual es incorrecta o error al cambiar la contraseña",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -851,7 +842,6 @@ public class GUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-
     public void setServidor(IntServidor servidor) {
         this.servidor = servidor;
     }

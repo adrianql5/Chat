@@ -454,6 +454,40 @@ public class GestorBD {
         return usuarios;
     }
 
-    public void modificarContraseña(String nombre, String nuevaContraseña) {
+    public boolean modificarContraseña(String nombre, String nuevaContraseña) {
+        if (conexion == null) {
+            System.err.println("ERROR: No hay conexión a la base de datos");
+            return false;
+        }
+
+        PreparedStatement ps = null;
+
+        try {
+            String sql = "UPDATE usuarios SET contrasena = ? WHERE nombre = ?";
+            ps = conexion.prepareStatement(sql);
+            ps.setString(1, nuevaContraseña);
+            ps.setString(2, nombre);
+
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("Contraseña modificada para usuario: " + nombre);
+                return true;
+            } else {
+                System.out.println("No se encontró el usuario para modificar la contraseña");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("ERROR al modificar contraseña:");
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
