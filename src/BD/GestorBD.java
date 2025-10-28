@@ -453,4 +453,7 @@ public class GestorBD {
 
         return usuarios;
     }
+
+    public void modificarContraseña(String nombre, String nuevaContraseña) {
+    }
 }

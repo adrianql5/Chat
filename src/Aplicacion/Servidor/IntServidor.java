@@ -12,6 +12,8 @@ public interface IntServidor extends Remote {
 
     List<String> obtenerUsuarios(String nombreParcial) throws RemoteException;
 
+    void modificarContraseña(String nombre, String nuevaContraseña) throws RemoteException;
+
     boolean solicitarAmistad(String clienteSolicitante, String clienteSolicitado) throws RemoteException;
     boolean aceptarAmistad(String clienteSolicitante, String clienteSolicitado) throws RemoteException;
     boolean rechazarAmistad(String clienteSolicitante, String clienteSolicitado) throws RemoteException;

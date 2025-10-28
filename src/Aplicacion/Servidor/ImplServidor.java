@@ -178,4 +178,8 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
         return gestorBD.obtenerUsuariosPorPatron(nombreParcial);
     }
 
+    @Override
+    public void modificarContraseña(String nombre, String nuevaContraseña) throws RemoteException {
+        gestorBD.modificarContraseña(nombre, nuevaContraseña);
+    }
 }

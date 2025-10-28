@@ -70,6 +70,14 @@ public class GUI extends javax.swing.JFrame {
     private JButton btnAceptarSolicitud;
     private JButton btnRechazarSolicitud;
 
+    // Panel de Perfil
+    private JPanel panelPerfil;
+    private JLabel lblNombreUsuarioPerfil;
+    private JPasswordField txtContraseñaActual;
+    private JPasswordField txtNuevaContraseña;
+    private JPasswordField txtConfirmarNuevaContraseña;
+    private JButton btnCambiarContraseña;
+
     public GUI() {
         this(null, null);
     }
@@ -271,6 +279,7 @@ public class GUI extends javax.swing.JFrame {
         try {
             if(servidor.conectarCliente(usuario, password, cliente)) {
                 nombreUsuario = usuario;
+                lblNombreUsuarioPerfil.setText(nombreUsuario);
                 return true;
             } else {
                 JOptionPane.showMessageDialog(this, "Credenciales inválidas o usuario ya conectado", "Error", JOptionPane.ERROR_MESSAGE);
@@ -326,6 +335,7 @@ public class GUI extends javax.swing.JFrame {
         tabbedPane.addTab("Chat", crearPanelChat());
         tabbedPane.addTab("Amigos", crearPanelAmigos());
         tabbedPane.addTab("Solicitudes", crearPanelSolicitudes());
+        tabbedPane.addTab("Perfil", crearPanelPerfil());  // Nueva pestaña
 
         tabbedPane.addChangeListener(e -> actualizarTodo());
 
@@ -443,45 +453,6 @@ public class GUI extends javax.swing.JFrame {
     public void añadirMensajeEnviado(String mensaje) {
         mensajesEnviados.add(mensaje);
     }
-
-    /*
-    private JPanel crearPanelAmigos() {
-        panelAmigos = new JPanel(new GridLayout(1, 2, 10, 10));
-        panelAmigos.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        // Panel izquierdo - TODOS LOS USUARIOS
-        JPanel panelUsuarios = new JPanel(new BorderLayout(5, 5));
-
-        JLabel lblUsuarios = new JLabel("Todos los Usuarios");
-        lblUsuarios.setHorizontalAlignment(SwingConstants.CENTER);
-        panelUsuarios.add(lblUsuarios, BorderLayout.NORTH);
-
-        modeloUsuariosRegistrados = new DefaultListModel<>();
-        listaUsuariosRegistrados = new JList<>(modeloUsuariosRegistrados);
-        JScrollPane scrollUsuarios = new JScrollPane(listaUsuariosRegistrados);
-        panelUsuarios.add(scrollUsuarios, BorderLayout.CENTER);
-
-        btnSolicitarAmistad = new JButton("Enviar Solicitud de Amistad");
-        btnSolicitarAmistad.addActionListener(e -> enviarSolicitudAmistad());
-        panelUsuarios.add(btnSolicitarAmistad, BorderLayout.SOUTH);
-
-        // Panel derecho - Mis amigos
-        JPanel panelMisAmigos = new JPanel(new BorderLayout(5, 5));
-
-        JLabel lblMisAmigos = new JLabel("Mis Amigos");
-        lblMisAmigos.setHorizontalAlignment(SwingConstants.CENTER);
-        panelMisAmigos.add(lblMisAmigos, BorderLayout.NORTH);
-
-        modeloAmigos = new DefaultListModel<>();
-        listaAmigos = new JList<>(modeloAmigos);
-        JScrollPane scrollMisAmigos = new JScrollPane(listaAmigos);
-        panelMisAmigos.add(scrollMisAmigos, BorderLayout.CENTER);
-
-        panelAmigos.add(panelUsuarios);
-        panelAmigos.add(panelMisAmigos);
-
-        return panelAmigos;
-    }*/
 
     private JPanel crearPanelAmigos() {
         panelAmigos = new JPanel(new GridLayout(1, 2, 10, 10));
@@ -698,6 +669,189 @@ public class GUI extends javax.swing.JFrame {
         }
     }
 
+    private JPanel crearPanelPerfil() {
+        panelPerfil = new JPanel(new GridBagLayout());
+        panelPerfil.setBorder(new EmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Título
+        JLabel lblTitulo = new JLabel("Mi Perfil");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panelPerfil.add(lblTitulo, gbc);
+
+        // Separador
+        JSeparator separador1 = new JSeparator();
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 20, 10);
+        panelPerfil.add(separador1, gbc);
+
+        // Sección de información del usuario
+        JLabel lblInfoTitulo = new JLabel("Información de Usuario");
+        lblInfoTitulo.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridy = 2;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        panelPerfil.add(lblInfoTitulo, gbc);
+
+        // Nombre de usuario
+        gbc.gridwidth = 1;
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel lblUsuario = new JLabel("Usuario:");
+        lblUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
+        panelPerfil.add(lblUsuario, gbc);
+
+        gbc.gridx = 1;
+        lblNombreUsuarioPerfil = new JLabel();
+        lblNombreUsuarioPerfil.setFont(new Font("Arial", Font.BOLD, 14));
+        panelPerfil.add(lblNombreUsuarioPerfil, gbc);
+
+        // Separador
+        JSeparator separador2 = new JSeparator();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 10, 20, 10);
+        panelPerfil.add(separador2, gbc);
+
+        // Sección de cambio de contraseña
+        JLabel lblCambioContraseña = new JLabel("Cambiar Contraseña");
+        lblCambioContraseña.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridy = 5;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        panelPerfil.add(lblCambioContraseña, gbc);
+
+        // Contraseña actual
+        gbc.gridwidth = 1;
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel lblContraseñaActual = new JLabel("Contraseña Actual:");
+        panelPerfil.add(lblContraseñaActual, gbc);
+
+        gbc.gridx = 1;
+        txtContraseñaActual = new JPasswordField(20);
+        panelPerfil.add(txtContraseñaActual, gbc);
+
+        // Nueva contraseña
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        JLabel lblNuevaContraseña = new JLabel("Nueva Contraseña:");
+        panelPerfil.add(lblNuevaContraseña, gbc);
+
+        gbc.gridx = 1;
+        txtNuevaContraseña = new JPasswordField(20);
+        panelPerfil.add(txtNuevaContraseña, gbc);
+
+        // Confirmar nueva contraseña
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        JLabel lblConfirmarNueva = new JLabel("Confirmar Nueva:");
+        panelPerfil.add(lblConfirmarNueva, gbc);
+
+        gbc.gridx = 1;
+        txtConfirmarNuevaContraseña = new JPasswordField(20);
+        panelPerfil.add(txtConfirmarNuevaContraseña, gbc);
+
+        // Botón cambiar contraseña
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(20, 10, 10, 10);
+        btnCambiarContraseña = new JButton("Cambiar Contraseña");
+        btnCambiarContraseña.setPreferredSize(new Dimension(200, 35));
+        btnCambiarContraseña.addActionListener(e -> cambiarContraseña());
+        panelPerfil.add(btnCambiarContraseña, gbc);
+
+        // Espacio adicional para empujar todo hacia arriba
+        gbc.gridy = 10;
+        gbc.weighty = 1.0;
+        panelPerfil.add(new JLabel(), gbc);
+
+        return panelPerfil;
+    }
+
+    private void cambiarContraseña() {
+        String contraseñaActual = new String(txtContraseñaActual.getPassword());
+        String nuevaContraseña = new String(txtNuevaContraseña.getPassword());
+        String confirmarNueva = new String(txtConfirmarNuevaContraseña.getPassword());
+
+        // Validaciones
+        if (contraseñaActual.isEmpty() || nuevaContraseña.isEmpty() || confirmarNueva.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor complete todos los campos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!nuevaContraseña.equals(confirmarNueva)) {
+            JOptionPane.showMessageDialog(this,
+                    "Las contraseñas nuevas no coinciden",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (nuevaContraseña.length() < 4) {
+            JOptionPane.showMessageDialog(this,
+                    "La nueva contraseña debe tener al menos 4 caracteres",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (contraseñaActual.equals(nuevaContraseña)) {
+            JOptionPane.showMessageDialog(this,
+                    "La nueva contraseña debe ser diferente a la actual",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            if (servidor != null) {
+                // Primero verificar la contraseña actual conectándose
+                if (servidor.conectarCliente(nombreUsuario, contraseñaActual, cliente)) {
+                    // Si la contraseña actual es correcta, proceder a cambiarla
+                    if (servidor.modificarContraseña(nombreUsuario, nuevaContraseña)) {
+                        JOptionPane.showMessageDialog(this,
+                                "Contraseña cambiada exitosamente",
+                                "Éxito",
+                                JOptionPane.INFORMATION_MESSAGE);
+
+                        // Limpiar campos
+                        txtContraseñaActual.setText("");
+                        txtNuevaContraseña.setText("");
+                        txtConfirmarNuevaContraseña.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Error al cambiar la contraseña",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "La contraseña actual es incorrecta",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (RemoteException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error de conexión con el servidor",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
     public void setServidor(IntServidor servidor) {
         this.servidor = servidor;
     }
@@ -723,19 +877,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
     }
-
-    /*
-    public void actualizarUsuariosRegistrados(ArrayList<String> strings) {
-        this.usuariosRegistrados = strings;
-        SwingUtilities.invokeLater(() -> {
-            modeloUsuariosRegistrados.clear();
-            for (String usuario : strings) {
-                if (!usuario.equals(nombreUsuario)) {
-                    modeloUsuariosRegistrados.addElement(usuario);
-                }
-            }
-        });
-    }*/
 
     public void actualizarAmigos(ArrayList<String> strings) {
         this.amigos = strings;
