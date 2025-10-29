@@ -5,14 +5,11 @@ import Aplicacion.Servidor.IntServidor;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import Aplicacion.Cliente.IntCliente;
-import Aplicacion.Servidor.IntServidor;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUI extends javax.swing.JFrame {
@@ -426,7 +423,6 @@ public class GUI extends javax.swing.JFrame {
                 if (clienteDestinatario != null) {
                     clienteDestinatario.recibirMensaje(mensaje, nombreUsuario);
 
-                    // Agregar mensaje enviado al área de mensajes
                     SwingUtilities.invokeLater(() -> {
                         areaMensajes.append("[Tú -> " + destinatario + "]: " + mensaje + "\n");
                         txtMensaje.setText("");
@@ -581,7 +577,6 @@ public class GUI extends javax.swing.JFrame {
                     return;
                 }
 
-                // Enviar solicitud
                 if (servidor.solicitarAmistad(nombreUsuario, usuarioSeleccionado)) {
                     JOptionPane.showMessageDialog(this,
                             "Solicitud enviada exitosamente a " + usuarioSeleccionado,
@@ -782,7 +777,6 @@ public class GUI extends javax.swing.JFrame {
         String nuevaContraseña = new String(txtNuevaContraseña.getPassword());
         String confirmarNueva = new String(txtConfirmarNuevaContraseña.getPassword());
 
-        // Validaciones
         if (contraseñaActual.isEmpty() || nuevaContraseña.isEmpty() || confirmarNueva.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Por favor complete todos los campos",

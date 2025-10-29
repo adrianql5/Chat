@@ -1,5 +1,3 @@
-// Copyright (c) 2025 Adrián Quiroga Linares Lectura y referencia permitidas; reutilización y plagio prohibidos
-
 package BD;
 
 import java.util.*;
@@ -9,6 +7,7 @@ import java.sql.*;
 public class GestorBD {
     private java.sql.Connection conexion;
 
+    // Constructor: establece la conexión a la base de datos
     public GestorBD() {
         Properties configuracion = new Properties();
         FileInputStream arqConfiguracion;
@@ -47,6 +46,7 @@ public class GestorBD {
     }
 
 
+    // Método para validar usuario y contraseña
     public boolean validarUsuario(String usuario, String contrasena) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -57,7 +57,6 @@ public class GestorBD {
         ResultSet rs = null;
 
         try {
-            // SELECT para validar credenciales
             String sql = "SELECT id, nombre FROM usuarios WHERE nombre = ? AND contrasena = ?";
             ps = conexion.prepareStatement(sql);
             ps.setString(1, usuario);
@@ -89,6 +88,7 @@ public class GestorBD {
     }
 
 
+    // Método para registrar un nuevo usuario
     public boolean registrarUsuario(String usuario, String clave) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -98,7 +98,6 @@ public class GestorBD {
         PreparedStatement ps = null;
 
         try {
-            // INSERT para crear nuevo usuario
             String sql = "INSERT INTO usuarios (nombre, contrasena) VALUES (?, ?)";
             ps = conexion.prepareStatement(sql);
             ps.setString(1, usuario);
@@ -133,6 +132,7 @@ public class GestorBD {
     }
 
 
+    // Método para verificar si un usuario existe
     public Boolean existeUsuario(String usuario) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -170,6 +170,7 @@ public class GestorBD {
         }
     }
 
+    // Método para registrar una solicitud de amistad
     public void registrarSolicitudAmistad(String clienteSolicitante, String clienteSolicitado) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -214,6 +215,7 @@ public class GestorBD {
     }
 
 
+    // Método para registrar una solicitud de amistad
     public void eliminarSolicitudAmistad(String clienteSolicitante, String clienteAceptante) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -248,6 +250,7 @@ public class GestorBD {
     }
 
 
+    // Método para registrar una amistad entre dos usuarios
     public boolean registrarAmistad(String usuario1, String usuario2) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -286,6 +289,7 @@ public class GestorBD {
     }
 
 
+    // Método para obtener la lista de amigos de un usuario
     public List<String> obtenerListaAmigos(String cliente) {
         List<String> amigos = new ArrayList<>();
 
@@ -325,6 +329,7 @@ public class GestorBD {
     }
 
 
+    // Método para obtener las solicitudes de amistad pendientes para un usuario
     public List<String> obtenerSolicitudesAmistad(String cliente) {
         List<String> solicitudes = new ArrayList<>();
 
@@ -364,6 +369,7 @@ public class GestorBD {
     }
 
 
+    // Método que devuelve una lista de usuarios cuyo nombre coincida parcialmente con el patrón dado
     public List<String> obtenerUsuariosPorPatron(String nombreParcial) {
         List<String> usuarios = new ArrayList<>();
 
@@ -402,6 +408,7 @@ public class GestorBD {
         return usuarios;
     }
 
+    // Método para mofidicar la contraseña de un usuario
     public boolean modificarContraseña(String nombre, String nuevaContraseña) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");

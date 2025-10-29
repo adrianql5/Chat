@@ -31,15 +31,6 @@ public class ImplCliente extends UnicastRemoteObject implements IntCliente{
         }
     }
 
-    /*
-    @Override
-    public void serNotificadoUsuariosRegistrados(List<String> usuarios)throws RemoteException{
-        System.out.println("Notificación recibida - Usuarios: " + usuarios);
-        if (gui != null) {
-            gui.actualizarUsuariosRegistrados(new ArrayList<>(usuarios));
-        }
-    }*/
-
     @Override
     public void serNotificadoAmigos(List<String> amigos)throws RemoteException{
         System.out.println("Notificación recibida - Amigos: " + amigos);

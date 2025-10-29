@@ -14,11 +14,9 @@ public class Cliente {
 
     public static void main(String[] args) {
         try {
-            // Conectar al registro RMI del servidor
             Registry registro = LocateRegistry.getRegistry("localhost", 1099);
             servidor = (IntServidor) registro.lookup("Servidor");
 
-            // Crear GUI primero (sin referencias)
             gui = new GUI();
 
             try {
@@ -31,14 +29,11 @@ public class Cliente {
                 e.printStackTrace();
             }
 
-            // Configurar las referencias en GUI
             gui.setServidor(servidor);
             gui.setCliente(intCliente);
 
-            // Mostrar GUI
             gui.setVisible(true);
 
-            // Agregar shutdown hook para desconectar al cerrar
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     if (servidor != null && gui.getNombreUsuario() != null) {
