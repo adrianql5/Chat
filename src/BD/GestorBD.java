@@ -247,9 +247,7 @@ public class GestorBD {
         }
     }
 
-    /**
-     * REGISTRAR AMISTAD (bidireccional)
-     */
+
     public boolean registrarAmistad(String usuario1, String usuario2) {
         if (conexion == null) {
             System.err.println("ERROR: No hay conexión a la base de datos");
@@ -259,7 +257,6 @@ public class GestorBD {
         PreparedStatement ps = null;
 
         try {
-            // Insertar en ambas direcciones para amistad bidireccional
             String sql = "INSERT INTO amistades (usuario1, usuario2) VALUES (?, ?), (?, ?)";
             ps = conexion.prepareStatement(sql);
             ps.setString(1, usuario1);
@@ -366,55 +363,6 @@ public class GestorBD {
         return solicitudes;
     }
 
-
-    public void cerrarConexion() {
-        try {
-            if (conexion != null && !conexion.isClosed()) {
-                conexion.close();
-                System.out.println("Conexión a base de datos cerrada");
-            }
-        } catch (SQLException e) {
-            System.err.println("ERROR al cerrar conexión:");
-            e.printStackTrace();
-        }
-    }
-
-    public List<String> obtenerListaUsuarios() {
-        List<String> usuarios = new ArrayList<>();
-
-        if (conexion == null) {
-            System.err.println("ERROR: No hay conexión a la base de datos");
-            return usuarios;
-        }
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = "SELECT nombre FROM usuarios";
-            ps = conexion.prepareStatement(sql);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                usuarios.add(rs.getString("nombre"));
-            }
-
-            System.out.println("Lista de usuarios: " + usuarios);
-
-        } catch (SQLException e) {
-            System.err.println("ERROR al obtener lista de usuarios:");
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return usuarios;
-    }
 
     public List<String> obtenerUsuariosPorPatron(String nombreParcial) {
         List<String> usuarios = new ArrayList<>();
