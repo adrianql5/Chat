@@ -27,9 +27,8 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
         return true;
     }
 
-
     @Override
-    public synchronized boolean conectarCliente(String nombre,String contraseña, IntCliente cliente) throws RemoteException{
+    public synchronized boolean conectarCliente(String nombre, String contraseña, IntCliente cliente) throws RemoteException{
         if(clientesConectados.containsKey(nombre)){
             return false;
         }
@@ -38,18 +37,28 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
             return false;
         }
 
+        clientesConectados.put(nombre, cliente);
 
-        clientesConectados.put(nombre,cliente);
+        List<String> amigosDelCliente = gestorBD.obtenerListaAmigos(nombre);
+        ConcurrentHashMap<String,IntCliente> amigosConectadosDelCliente = getAmigosConectados(nombre);
+        List<String> solicitudesPendientesDelCliente = gestorBD.obtenerSolicitudesAmistad(nombre);
 
-        for(Map.Entry<String, IntCliente> entry : clientesConectados.entrySet()){
+        try {
+            cliente.serNotificadoAmigos(amigosDelCliente);
+            cliente.serNotificadoAmigosConectados(amigosConectadosDelCliente);
+            cliente.serNotificadoSolicitudesPendientes(solicitudesPendientesDelCliente);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for(Map.Entry<String, IntCliente> entry : amigosConectadosDelCliente.entrySet()){
             try {
                 entry.getValue().serNotificadoAmigosConectados(getAmigosConectados(entry.getKey()));
-                entry.getValue().serNotificadoAmigos(gestorBD.obtenerListaAmigos(entry.getKey()));
-                entry.getValue().serNotificadoSolicitudesPendientes(gestorBD.obtenerSolicitudesAmistad(entry.getKey()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         return true;
     }
 
@@ -59,15 +68,18 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
             return false;
         }
 
+        ConcurrentHashMap<String,IntCliente> amigosConectadosDelCliente = getAmigosConectados(nombre);
+
         clientesConectados.remove(nombre);
 
-        for(Map.Entry<String, IntCliente> entry : clientesConectados.entrySet()){
+        for(Map.Entry<String, IntCliente> entry : amigosConectadosDelCliente.entrySet()){
             try {
                 entry.getValue().serNotificadoAmigosConectados(getAmigosConectados(entry.getKey()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         return true;
     }
 
@@ -118,7 +130,6 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
                         entry.getValue().serNotificadoAceptacionSolicitud(clienteAceptante);
                         entry.getValue().serNotificadoAmigosConectados(getAmigosConectados(entry.getKey()));
                         entry.getValue().serNotificadoAmigos(gestorBD.obtenerListaAmigos(entry.getKey()));
-                        entry.getValue().serNotificadoSolicitudesPendientes(gestorBD.obtenerSolicitudesAmistad(entry.getKey()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -144,21 +155,13 @@ public class ImplServidor extends UnicastRemoteObject implements IntServidor {
             gestorBD.eliminarSolicitudAmistad(clienteSolicitante, clienteAceptante);
 
             for (Map.Entry<String, IntCliente> entry : clientesConectados.entrySet()) {
-                if (entry.getKey().equals(clienteSolicitante)) {
-                    try {
-                        entry.getValue().serNotificadoSolicitudesPendientes(gestorBD.obtenerSolicitudesAmistad(clienteAceptante));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if(entry.getKey().equals(clienteAceptante)){
+                if(entry.getKey().equals(clienteAceptante)){
                     try {
                         entry.getValue().serNotificadoSolicitudesPendientes(gestorBD.obtenerSolicitudesAmistad(entry.getKey()));
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-
             }
             return true;
         }
