@@ -52,12 +52,4 @@ public class Cliente {
             System.exit(1);
         }
     }
-
-    public static IntServidor getServidor() {
-        return servidor;
-    }
-
-    public static IntCliente getCliente() {
-        return intCliente;
-    }
 }
