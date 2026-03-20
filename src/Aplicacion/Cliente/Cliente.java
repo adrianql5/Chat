@@ -1,5 +1,3 @@
-// Copyright (c) 2025 Adrián Quiroga Linares Lectura y referencia permitidas; reutilización y plagio prohibidos
-
 package Aplicacion.Cliente;
 
 import Aplicacion.Servidor.IntServidor;
